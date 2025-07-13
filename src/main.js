@@ -1,7 +1,21 @@
 import './style.css';
 
 const COLOR_BG = '#282828';
-const WORDS_COUNT = 2;
+let WORDS_COUNT = 2;
+
+const slowa = [
+  "jabłko", "samochód", "drzewo", "książka", "pies", "kot", "dom", "rower", "szkoła", "nauczyciel",
+  "uczeń", "komputer", "mysz", "klawiatura", "okno", "drzwi", "kwiat", "krzesło", "stół", "łóżko",
+  "światło", "cień", "mleko", "chleb", "masło", "ser", "pomidor", "ogórek", "ziemniak", "woda",
+  "słońce", "księżyc", "gwiazda", "niebo", "deszcz", "śnieg", "wiatr", "burza", "tęcza", "zegar",
+  "czas", "dzień", "noc", "tydzień", "miesiąc", "rok", "zegarek", "telefon", "telewizor", "radio",
+  "gazeta", "muzyka", "film", "teatr", "gra", "zabawa", "piłka", "sport", "bieg", "skok",
+  "taniec", "śpiew", "malarz", "aktor", "pisarz", "lekcja", "egzamin", "pytanie", "odpowiedź",
+  "język", "słowo", "litera", "zdanie", "paragraf", "kartka", "zeszyt", "plecak", "długopis",
+  "ołówek", "gumka", "linijka", "farba", "pędzel", "papier", "nożyczki", "klej", "muzeum",
+  "galeria", "zoo", "las", "góry", "morze", "jezioro", "rzeka", "miasto", "wieś", "droga",
+  "ulica", "most", "sklep", "kawiarnia", "restauracja", "kino", "apteka", "szpital", "biblioteka"
+];
 
 const gameContext = {
     input: '',
@@ -9,12 +23,18 @@ const gameContext = {
 }
 
 const word = (id, content) => {
-    let x = Math.random() * window.innerWidth;
+    let x = null;
     let y = Math.random() * -100;
 
     return {
         frame: (ctx, gameContext) => {
             ctx.font = '16px Helvetica';
+
+            if (null === x) {
+                const minWidth = ctx.measureText(content).width * 2;
+                x = Math.random() * (window.innerWidth - minWidth) + minWidth;
+            }
+
             let textToRender = content;
             let offset = 0;
             if (gameContext.selectedWord === id 
@@ -50,9 +70,11 @@ const invaders = () => {
     let ok = true;
 
     const fillWords = () => {
-        const missingWordsCount = WORDS_COUNT - words.length;
+        const currentWordsCount = Math.round(WORDS_COUNT);
+        const missingWordsCount = currentWordsCount - words.length;
         for (let i = 0; i < missingWordsCount; ++i) {
-            words.push(word(++wordsIndex, 'testowe'));
+            const contentIndex = Math.floor(Math.random() * slowa.length);
+            words.push(word(++wordsIndex, slowa[contentIndex]));
         }
     }
 
@@ -118,6 +140,7 @@ const invaders = () => {
             ) {
                 gameContext.input = '';
                 words = words.filter((word) => word.id !== selectedWord.id);
+                WORDS_COUNT += 0.2;
             } else if (null !== selectedWord) {
                 gameContext.selectedWord = selectedWord.id;
             } else {
@@ -146,12 +169,57 @@ const frame = () => {
 
 requestAnimationFrame(frame);
 
-window.addEventListener('keyup', event => {
-    if (event.ctrlKey && event.key === 'Backspace') {
-        gameContext.input = '';
-    } else if (event.key === 'Backspace') {
-        gameContext.input = gameContext.input.substring(-1, gameContext.input.length - 1);
-    } else if (/^[a-z]$/.test(event.key)) {
-        gameContext.input += event.key;
+window.addEventListener('keydown', event => {
+    event.preventDefault();
+    switch (event.key) {
+        case 'Backspace': {
+            if (event.ctrlKey) {
+                gameContext.input = '';
+            } else {
+                gameContext.input = gameContext.input.substring(-1, gameContext.input.length - 1);
+            }
+
+            break;
+        }
+
+        case 'a':
+        case 'ą':
+        case 'b':
+        case 'c':
+        case 'ć':
+        case 'd':
+        case 'e':
+        case 'ę':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'ł':
+        case 'm':
+        case 'n':
+        case 'ń':
+        case 'o':
+        case 'ó':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 'ś':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':
+        case 'ź':
+        case 'ż': {
+            gameContext.input += event.key;
+
+            break;
+        }
     }
 });
