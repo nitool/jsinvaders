@@ -90,6 +90,12 @@ const invaders = () => {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (!ok) {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, canvas.height - 200, canvas.width, 200);
+                ctx.fillStyle = 'black';
+                const score = parseInt((WORDS_COUNT - 2) * 10);
+                ctx.fillText(score, 20, canvas.height - 20);
+
                 return;
             }
 
@@ -104,6 +110,9 @@ const invaders = () => {
             ctx.fillRect(0, canvas.height - 200, canvas.width, 200);
             ctx.fillStyle = 'black';
             ctx.fillText(gameContext.input, start, canvas.height - 100);
+
+            const score = parseInt((WORDS_COUNT - 2) * 10);
+            ctx.fillText(score, 20, canvas.height - 20);
         },
 
         update: () => {
