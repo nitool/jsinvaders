@@ -179,9 +179,9 @@ const frame = () => {
 requestAnimationFrame(frame);
 
 window.addEventListener('keydown', event => {
-    event.preventDefault();
     switch (event.key) {
         case 'Backspace': {
+            event.preventDefault();
             if (event.ctrlKey) {
                 gameContext.input = '';
             } else {
@@ -226,7 +226,10 @@ window.addEventListener('keydown', event => {
         case 'z':
         case 'ź':
         case 'ż': {
-            gameContext.input += event.key;
+            if (!event.ctrlKey) {
+                event.preventDefault();
+                gameContext.input += event.key;
+            }
 
             break;
         }
